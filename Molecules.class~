@@ -1,0 +1,309 @@
+' Gambas class file
+substance AS String
+formula AS String[]
+weight AS Float
+group AS String
+hazard AS String[]
+description AS String
+
+
+formula_correct AS Boolean
+
+FUNCTION getnewId(entries AS Result) AS Integer
+ 
+  IF entries.Length <> 0 THEN 
+    entries.MoveLast()
+    RETURN entries!id + 1
+  ELSE 
+    RETURN 0
+  ENDIF 
+  
+END
+
+PUBLIC SUB clear()
+  
+  substance = ""
+  formula = []
+  weight = 0
+  group = ""
+  hazard = []
+  description = ""
+  
+END
+
+
+PUBLIC FUNCTION putSubstance(inptext AS String) AS Byte
+  
+  IF inptext <> "" THEN 
+    substance = inptext
+    RETURN 0
+  ELSE 
+    RETURN 1
+  ENDIF 
+  
+END
+
+
+PUBLIC FUNCTION putGroup(inptext AS String) AS Byte
+  
+  IF inptext <> "" THEN 
+    group = inptext
+    RETURN 0
+  ELSE 
+    RETURN 1
+  ENDIF 
+  
+END
+
+
+PUBLIC FUNCTION putWeight(inpvalue AS Float) AS Byte
+  
+  IF inpvalue <> 0 THEN 
+    weight = inpvalue
+    RETURN 0
+  ELSE 
+    RETURN 1
+  ENDIF 
+  
+END
+
+' PUBLIC SUB insertMolecule(substance AS String, formula AS String[], weight AS Float, group_prop AS String)
+'   DIM newentry, newmolcomp AS Result
+'   DIM search AS Result
+'   DIM id, i AS Integer
+'   
+'   id = getnewId(Global.dbcon.Find("molecules"))
+'   
+'   Global.dbcon.Begin()
+'    
+'    newentry = Global.dbcon.Create("molecules")
+'    newentry!id = id
+'    newentry!name = substance
+'   ' newentry!molcompid = id --> obsolete
+'    newentry!weight = weight
+'    newentry!group = group_prop
+'    newentry.Update()
+'    
+'    FOR i = 0 TO formula.Length - 1 STEP 2
+'      newmolcomp = Global.dbcon.Create("molcomp")
+'      newmolcomp!id = id
+'      newmolcomp!symbol = formula[i]
+'      newmolcomp!count = formula[i + 1]
+'      newmolcomp.Update()
+'    NEXT 
+'   
+'   Global.dbcon.Commit()
+'   
+' END
+
+PUBLIC FUNCTION getName(seekid AS String) AS String
+  
+  DIM item AS Result
+  
+  item = Global.dbcon.Find("molecules", "id = &1", seekid)
+  
+  FOR EACH item
+    RETURN item!name
+  NEXT 
+
+END
+
+PUBLIC FUNCTION getFormula(seekid AS String) AS String
+  
+  DIM item AS Result
+  DIM molid, formula AS String
+  
+  item = Global.dbcon.Find("molecules", "id = &1", seekid)
+ 
+  FOR EACH item
+    molid = item!id
+  NEXT 
+  
+  item = Global.dbcon.Find("molcomp", "id = &1", molid)
+    
+  FOR EACH item 
+    IF item!id = molid THEN 
+      formula = formula & item!symbol
+        IF item!count <> 1 THEN formula = formula & item!count
+    ENDIF 
+  NEXT 
+  
+  RETURN formula
+END
+
+PUBLIC FUNCTION getMass(seekid AS String) AS Float
+
+  DIM item AS Result
+  
+  item = Global.dbcon.Find("molecules", "id = &1", seekid)
+    
+  FOR EACH item
+    IF item!id = seekid THEN RETURN item!weight
+  NEXT
+  
+END
+
+PUBLIC FUNCTION getGroup(seekid AS String) AS String
+  
+  DIM item AS Result
+  
+  item = Global.dbcon.Find("molecules", "id = &1", seekid)
+    
+  FOR EACH item
+    IF item!id = seekid THEN RETURN item!group
+  NEXT
+  
+END
+
+PUBLIC SUB deleteMolecule(seekid AS String)
+  DIM item AS Result
+  
+  item = Global.dbcon.edit("molecules", "id = &1", seekid)
+  item!deleted = "d"
+  item.Update
+  
+END
+
+FUNCTION scanFormula(expression AS String) AS String[] 'splits then entered formula and returns tokens
+
+  DIM edited_exp AS String
+  DIM tokens AS String[]
+  DIM i, j AS Integer
+  DIM atomtable AS Object
+  DIM iscorrect AS Boolean
+  
+  atomtable = global.atomtable
+  iscorrect = TRUE
+
+  FOR i = 1 TO Len(expression)
+    IF IsUpper(Mid(expression, i + 1, 1)) OR ((IsDigit(Mid(expression, i + 1, 1))) AND NOT (IsDigit(Mid(expression, i, 1))))
+      edited_exp = edited_exp & Mid(expression, i, 1) & ","
+    ELSE 
+      edited_exp = edited_exp & Mid(expression, i, 1) 
+    ENDIF 
+  NEXT 
+  
+  tokens = Split(edited_exp, ",")
+  tokens.Add("!")
+  
+  'check if expression (formula) is correct
+  IF IsDigit(tokens[0]) THEN 
+    iscorrect = FALSE
+  ELSE 
+  
+    FOR j = 0 TO tokens.Length - 2
+      IF NOT IsDigit(tokens[j]) AND atomtable.getWeight(tokens[j]) = 0 THEN iscorrect = FALSE
+    NEXT 
+  ENDIF 
+  
+  IF iscorrect = TRUE THEN RETURN tokens
+
+END
+
+FUNCTION buildMolComponents(tokens AS String[]) AS String[]
+  DIM mc_out AS NEW String[]
+  DIM i AS Integer
+  
+  IF formula_correct THEN 
+    FOR i = 0 TO tokens.Length - 2
+      IF (NOT IsDigit(tokens[i])) AND NOT (IsDigit(tokens[i + 1])) THEN 
+        mc_out.Add(tokens[i])
+        mc_out.add("1")
+      ELSE 
+        IF NOT (IsDigit(tokens[i])) THEN 
+          mc_out.add(tokens[i])
+          mc_out.add(tokens[i + 1])
+        ENDIF 
+      ENDIF 
+    NEXT 
+  ENDIF 
+  RETURN mc_out
+  
+END
+
+PUBLIC FUNCTION putFormula(formula AS String) AS Float
+  
+  DIM token_list AS String[]
+  DIM i, j, k AS Integer
+  DIM weight AS Float
+  DIM atomtable AS Object
+  
+  atomtable = global.atomtable
+  token_list = scanFormula(formula)
+  weight = 0
+  
+  FOR i = 0 TO token_list.Length - 2 
+    IF token_list[i + 1] <> "!" AND IsDigit(token_list[i + 1]) THEN 
+      weight = weight + CInt(token_list[i + 1]) * atomtable.getweight(token_list[i])
+    ELSE 
+      IF NOT IsDigit(token_list[i]) THEN weight = weight + atomtable.getweight(token_list[i])
+    ENDIF
+    
+  NEXT
+  
+  '  mass.Value = weight
+    formula_correct = TRUE
+    PRINT "entered correct formula: ", formula_correct
+    RETURN weight
+    
+  CATCH 
+    ' mass.Value = 0
+    formula_correct = FALSE
+    Message.Warning("entered formula is wrong", "OK")
+    PRINT "entered correct formula: ", formula_correct
+    RETURN 0
+END
+
+
+PUBLIC SUB drawMoleculesTV(tview AS TreeView)
+  DIM items AS Result
+  
+  items = Global.dbcon.Find("molecules")
+
+  FOR EACH items
+    IF items!deleted = "" 
+      tview.Add("Molecules-" & items!id, items!name, Picture["./pic/icons/molecules.png"], "Molecules")
+    ENDIF 
+  NEXT 
+  
+  CATCH 
+  
+END
+
+PUBLIC SUB drawMoleculesCV(cview AS ColumnView, OPTIONAL cutted AS Boolean)
+  DIM items AS Result
+  DIM i, cvwidth AS Integer
+  
+  items = Global.dbcon.Find("molecules")
+  
+  IF cutted = TRUE THEN 
+    cview.Columns.Count = 2
+  ELSE 
+    cview.Columns.Count = 4
+  ENDIF 
+  
+  cvwidth = cview.Width / cview.Columns.Count
+  
+  FOR i = 0 TO cview.Columns.Count - 1
+    cview.Columns[i].Width = cvwidth
+  NEXT 
+  
+  cview.Columns[0].Text = "Molecule"
+  cview.Columns[1].Text = "Formula"
+  IF cutted = FALSE THEN 
+    cview.Columns[2].Text = "Mass"
+    cview.Columns[3].Text = "Group"
+  ENDIF 
+  
+  FOR EACH items
+    IF items!deleted = "" THEN 
+      cview.Add(items!id, items!name) ', Picture["Molecule.png"]
+      cview[items!id][1] = getFormula(items!id)
+      IF cutted = FALSE THEN 
+        cview[items!id][2] = items!weight
+        cview[items!id][3] = items!group
+      ENDIF
+    ENDIF  
+  NEXT 
+  
+END

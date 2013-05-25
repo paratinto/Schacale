@@ -1,0 +1,6 @@
+' Gambas class file
+id AS String[]
+name AS String[]
+count AS Integer[]
+
+PUBLIC SUB 

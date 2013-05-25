@@ -1,0 +1,40 @@
+' Gambas class file
+atoms AS NEW Object[]
+
+PUBLIC SUB _new()
+  
+ ' DIM i AS Integer
+  DIM data AS Stream
+  DIM dline AS String
+  DIM sline AS String[]
+  DIM newatom AS NEW Atom  
+ ' i = 0
+  
+  data = OPEN "Atoms.db" FOR INPUT 
+  
+    WHILE NOT Eof(data)
+      LINE INPUT #data, dline
+      newatom = NEW Atom
+      sline = Split(dline, ";")
+      newatom.putSymbol(sline[0])
+      newatom.putMass(sline[1])
+      atoms.add(newatom)
+    WEND 
+  
+  CLOSE #data
+  
+  PRINT "AtomTable initilized"
+  
+END
+
+PUBLIC FUNCTION getweight(elem AS String) AS Float
+  
+  DIM i AS Integer
+  
+  FOR i = 0 TO atoms.length - 1
+    IF atoms[i].getSymbol() = elem THEN RETURN atoms[i].getmass()
+  NEXT
+  
+END
+
+

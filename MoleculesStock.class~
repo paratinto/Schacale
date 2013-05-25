@@ -1,0 +1,9 @@
+' Gambas class file
+' Molecules in stock: columns
+' 0 id
+' 1 molid
+' 2 quantity
+' 3 location
+' 4 compid
+' 5 delivery
+' 

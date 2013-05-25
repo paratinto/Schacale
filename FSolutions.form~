@@ -1,0 +1,54 @@
+# Gambas Form File 2.0
+
+{ Form Form
+  MoveScaled(0,0,102,46)
+  Text = ("")
+  { Frame1 Frame
+    MoveScaled(2,5,98,38)
+    Text = ("compose solution")
+    { ColumnView1 ColumnView
+      MoveScaled(1,3,30,31)
+    }
+    { Frame2 Frame
+      MoveScaled(32,3,19,31)
+      Text = ("ingredient")
+      { ingedient TextBox
+        MoveScaled(1,4,17,3)
+        Text = ("TextBox1")
+      }
+      { concentration ValueBox
+        MoveScaled(1,9,9,3)
+      }
+      { unit ComboBox
+        MoveScaled(11,9,7,3)
+        Text = ("ComboBox1")
+        List = [("M"), ("mM"), ("g/L"), ("mg/L")]
+      }
+      { Button1 Button
+        MoveScaled(4,14,11,3)
+        Background = &H00C000&
+        Text = ("add ->")
+      }
+      { Button2 Button
+        MoveScaled(4,18,11,3)
+        Text = ("update")
+      }
+      { Button3 Button
+        MoveScaled(4,22,11,3)
+        Background = &HFF0000&
+        Text = ("<-- remove")
+      }
+    }
+    { Frame3 Frame
+      MoveScaled(52,3,43,31)
+      Text = ("Frame3")
+      { ColumnView2 ColumnView
+        MoveScaled(1,7,41,23)
+      }
+      { name TextBox
+        MoveScaled(1,3,21,3)
+        Text = ("TextBox1")
+      }
+    }
+  }
+}

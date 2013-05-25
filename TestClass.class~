@@ -1,0 +1,6 @@
+' Gambas class file
+STATIC PUBLIC SUB _init()
+  
+  
+  
+END

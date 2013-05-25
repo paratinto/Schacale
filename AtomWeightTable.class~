@@ -1,0 +1,39 @@
+' Gambas class file
+symbol AS NEW String[]
+weight AS NEW Float[]
+bounds AS NEW Integer[]
+
+
+PUBLIC SUB init()
+  
+ ' DIM i AS Integer
+  DIM data AS Stream
+  DIM dline AS String
+  DIM sline AS String[]
+    
+ ' i = 0
+  
+  data = OPEN "AtomicMass.db" FOR INPUT 
+  
+    WHILE NOT Eof(data)
+      LINE INPUT #data, dline
+      sline = Split(dline, ";")
+      symbol.add(sline[0])
+      weight.add(sline[1])
+    WEND 
+  
+  CLOSE #data
+  
+END
+
+PUBLIC FUNCTION getweight(elem AS String) AS Float
+  
+  DIM pos AS Integer
+
+  pos = atom.find(elem)
+  
+  RETURN weight[pos]
+  
+END
+
+

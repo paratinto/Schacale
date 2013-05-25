@@ -1,0 +1,47 @@
+# Gambas Form File 2.0
+
+{ Form Form
+  MoveScaled(0,0,47,22)
+  Text = ("")
+  { Data Menu
+    Text = ("Data")
+  }
+  { Options Menu
+    Text = ("Options")
+    { usersettings Menu
+      Text = ("User settings")
+    }
+  }
+  { Frame1 Frame
+    MoveScaled(1,1,22,16)
+    Text = ("Experiment planning")
+    { Molecules Button
+      MoveScaled(2,3,17,3)
+      Text = ("Molecules")
+    }
+    { Recipes Button
+      MoveScaled(2,7,17,3)
+      Text = ("Recipes")
+    }
+    { SOPs Button
+      MoveScaled(2,11,17,3)
+      Text = ("SOPs")
+    }
+  }
+  { Frame2 Frame
+    MoveScaled(25,1,21,16)
+    Text = ("Laboratory journal")
+    { Chemicals Button
+      MoveScaled(2,3,16,3)
+      Text = ("Chemical store")
+    }
+    { Solutions Button
+      MoveScaled(2,7,16,3)
+      Text = ("Solutions")
+    }
+    { Results Button
+      MoveScaled(2,11,16,1)
+      Text = ("Results")
+    }
+  }
+}

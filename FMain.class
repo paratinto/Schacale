@@ -1,0 +1,193 @@
+' Gambas class file
+cmolecule AS NEW Molecule
+labdb AS NEW Schacale
+hazardl AS NEW String[]
+
+PUBLIC SUB drawForm()
+  
+  DIM categories AS String[] = ["Molecules", "Recipes", "Experiments"]
+  DIM hazards AS String[] = ["Corrosive", "Explosive", "Flammable", "Nature polluting", "Noxious", "Oxidising", "Toxic"]
+  DIM category AS String
+  DIM danger AS String
+  DIM i AS Integer
+  
+  
+  Global.initapp()
+ 
+  FOR EACH category IN categories
+    TViewOffice.Add(category, category)
+  NEXT
+
+  CBoxHazard.List = hazards  
+  
+  WebBrowser1.Zoom = 80
+  
+END
+
+PUBLIC SUB drawMolecule(molitem AS Molecule)
+  
+  substance.Text = molitem.getName()
+  formula.Text = molitem.getFormula()
+  mass.Value = molitem.getWeight()
+  group.Text = molitem.getGroup()
+  description.Text = molitem.getDescription()
+  drawhazards(molitem.getHazard())
+  labdb.drawMoleculesTV(TViewOffice)
+  'WebBrowser1.Path = "http://en.wikipedia.org/w/index.php?title=" & urlcomp & "&printable=yes" 
+  
+  WebBrowser1.Path = "http://webbook.nist.gov/cgi/cbook.cgi?Name=" & molitem.getName() & "&Units=SI&Units=SI&cTG=1&cTC=1&cTP=1&cTR=1&cPI=1"
+  
+  
+END
+
+
+PUBLIC SUB Form_Open()
+  DIM oldcounter AS Result
+  
+  DrawForm()
+  labdb.loadmoleculesDB()
+
+
+  
+END
+
+PUBLIC SUB TViewOffice_MouseDrag()
+  
+  Drag(TViewOffice, TViewOffice.Key)
+ 
+END
+
+PUBLIC SUB dynLoadDB() 'dynamic and partial loading of db-items
+  
+  DIM i, elemid AS Integer
+  DIM type AS String
+  DIM skey AS String[]
+   
+  skey = Split(TViewOffice.Key, "-")
+  
+  type = skey[0]
+  elemid = CInt(skey[1])
+  CATCH
+  
+  PRINT type
+    
+  IF TViewOffice.Current.Expanded = FALSE
+    IF TViewOffice.Key = "Molecules" THEN 
+      labdb.drawMoleculesTV(TViewOffice)
+      
+    ENDIF 
+  ENDIF 
+  
+END
+
+
+PUBLIC SUB TViewOffice_Select()
+  DIM i AS Integer
+  DIM type AS String
+  DIM skey AS String[]
+  DIM itemid AS Integer
+  
+  skey = Split(TViewOffice.Key, "-")
+  type = skey[0]
+  IF type = "Molecules" THEN TStripOffice.Index = 0
+  IF skey.Length > 1 THEN
+    itemid = CInt(Split(TViewOffice.Key, "-")[1])
+    PRINT itemid
+   ' cmolecule = 
+    drawMolecule(labdb.getMolecule(itemid))
+  ENDIF 
+
+END
+
+
+PUBLIC SUB TViewOffice_DblClick()
+  
+  dynLoadDB()
+ 
+END
+
+
+
+PUBLIC SUB substance_LostFocus()
+
+  WebBrowser1.Path = "http://webbook.nist.gov/cgi/cbook.cgi?Name=" & substance.Text & "&Units=SI&Units=SI&cTG=1&cTC=1&cTP=1&cTR=1&cPI=1"
+  Webaction.getSite(cmolecule.getName())
+  formula.Text = Webaction.molformula()
+  mass.Value = Webaction.molWeight()
+
+END
+
+
+PUBLIC SUB TBdelHazard_Click()
+  DIM delpos AS Integer
+  
+  
+  delpos = hazardl.Find(LViewHazard.Key)
+  hazardl.extract(delpos)
+  LViewHazard[LViewHazard.key].Delete
+  drawhazards(hazardl)
+  CATCH 
+  
+  
+END
+
+SUB drawhazards(hazards AS String[])
+  DIM i AS Integer
+  
+  hazardl = hazards
+  
+  LViewHazard.Clear()
+  
+  FOR i = 0 TO hazards.Length - 1
+    LViewHazard.Add(hazards[i], hazards[i], Picture["./pic/symbols/" & LCase(hazards[i]) & ".png"])
+  NEXT 
+    
+  CATCH
+
+END 
+
+PUBLIC SUB TBinsHazard_Click()
+
+  ' LViewHazard.Add(CBoxHazard.Text, CBoxHazard.Text, Picture["./pic/symbols/" & LCase(CBoxHazard.Text) & ".png"])
+  IF hazardl.Exist(CBoxHazard.Text) = FALSE THEN 
+  '  PRINT "neu!"
+    hazardl.Add(CBoxHazard.Text)
+    drawhazards(hazardl)
+  ENDIF 
+  
+
+END
+
+PUBLIC SUB description_LostFocus()
+
+  cmolecule.putDescription(description.Text)
+' PRINT cmolecule.getdescription
+
+END
+
+PUBLIC SUB TBSaveMolecule_Click()
+  DIM nmolecule AS NEW Molecule
+  
+  
+  nmolecule.putName(substance.Text)
+  nmolecule.putFormula(formula.Text)
+  nmolecule.putWeight(mass.Value)
+  nmolecule.putGroup(group.Text)
+  nmolecule.putDescription(description.Text)
+  nmolecule.putHazard(hazardl)
+  labdb.putmolecule(nmolecule)
+  labdb.drawMoleculesTV(TViewOffice)
+  
+ ' drawMolecule()
+
+END
+
+PUBLIC SUB formula_LostFocus()
+  'DIM nmolecule AS NEW Molecule
+  
+  mass.Value = cmolecule.putFormula(formula.Text)
+
+END
+
+
+

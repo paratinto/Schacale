@@ -1,0 +1,306 @@
+# Gambas Form File 2.0
+
+{ Form Form
+  Move(0,0,800,600)
+  #(Scaled) = False
+  Visible = False
+  Text = ("")
+  Icon = Picture["schacale.png"]
+  Arrangement = Arrange.Horizontal
+  { TViewOffice TreeView
+    Move(0,14,196,546)
+    Sorted = True
+  }
+  { TStripMain TabStrip
+    Move(196,0,630,595)
+    Expand = True
+    Arrangement = Arrange.Vertical
+    Padding = 3
+    Count = 2
+    Orientation = TabStrip.Bottom
+    Index = 0
+    Text = ("Office")
+    Picture = Picture["icon:/small/desktop"]
+    { HBox1 HBox
+      Move(0,0,651,518)
+      Expand = True
+      { TStripOffice TabStrip
+        Move(7,28,588,469)
+        Expand = True
+        Arrangement = Arrange.Vertical
+        Padding = 3
+        Count = 3
+        Index = 0
+        Text = ("Molecules")
+        { Panel2 Panel
+          Move(0,0,427,28)
+          Arrangement = Arrange.Horizontal
+          Border = Border.Raised
+          { ToolButton1 ToolButton
+            Move(7,0,21,21)
+            Text = ("")
+            Picture = Picture["icon:/small/new"]
+          }
+          { ToolButton2 ToolButton
+            Move(35,0,21,21)
+            Text = ("")
+            Picture = Picture["icon:/small/edit"]
+          }
+          { TBSaveMolecule ToolButton
+            Move(63,0,21,21)
+            Text = ("")
+            Picture = Picture["icon:/small/save"]
+          }
+        }
+        { Panel3 Panel
+          Move(0,28,567,119)
+          Arrangement = Arrange.Horizontal
+          { VBox1 VBox
+            Move(7,7,119,112)
+            { Label1 Label
+              Move(0,0,77,28)
+              Padding = 2
+              Text = ("Substance:")
+            }
+            { Label2 Label
+              Move(0,28,63,28)
+              Padding = 2
+              Text = ("Formula:")
+            }
+            { Label3 Label
+              Move(0,56,112,28)
+              Padding = 2
+              Text = ("Weight [g/mol]:")
+            }
+            { Label5 Label
+              Move(0,84,77,28)
+              Padding = 2
+              Text = ("Group:")
+            }
+          }
+          { VBox2 VBox
+            Move(126,7,140,112)
+            { substance TextBox
+              Move(0,0,105,28)
+              Text = ("")
+            }
+            { formula TextBox
+              Move(0,28,105,28)
+              Text = ("")
+            }
+            { mass ValueBox
+              Move(0,56,105,28)
+            }
+            { group ComboBox
+              Move(0,84,105,28)
+              Text = ("")
+              ReadOnly = True
+              List = [("other"), ("nucleotide"), ("amino acid"), ("salt"), ("detergent"), ("lipid")]
+            }
+          }
+          { description TextArea
+            Move(266,7,147,112)
+            Expand = True
+            Text = ("Description")
+            Wrap = True
+          }
+          { VBox5 VBox
+            Move(413,7,140,112)
+            { HBox4 HBox
+              Move(21,7,140,21)
+              { TBinsHazard ToolButton
+                Move(-7,0,21,21)
+                Text = ("")
+                Picture = Picture["icon:/small/add"]
+              }
+              { TBDelHazard ToolButton
+                Move(14,0,21,21)
+                Text = ("")
+                Picture = Picture["icon:/small/delete"]
+              }
+              { CBoxHazard ComboBox
+                Move(35,0,84,21)
+                Expand = True
+                Text = ("ComboBox2")
+                ReadOnly = True
+              }
+            }
+            { LViewHazard ListView
+              Move(7,28,133,98)
+            }
+          }
+        }
+        { ComboBox1 ComboBox
+          Move(7,147,476,21)
+          Text = ("Choose Website")
+        }
+        { WebBrowser1 WebBrowser
+          Move(7,175,469,245)
+          Expand = True
+        }
+        Index = 1
+        Text = ("Recipes")
+        { Panel4 Panel
+          Move(21,14,525,63)
+          Arrangement = Arrange.Vertical
+          Padding = 4
+          Border = Border.Plain
+          { HBox6 HBox
+            Move(0,0,497,21)
+            Expand = True
+            Spacing = 2
+            { Label13 Label
+              Move(0,0,112,21)
+              Expand = True
+              Text = ("Name:")
+            }
+            { Label14 Label
+              Move(112,0,140,21)
+              Text = ("Concentration:")
+            }
+            { Label4 Label
+              Move(273,0,112,21)
+              Expand = True
+              Text = ("Solvent:")
+            }
+            { Label15 Label
+              Move(399,0,63,21)
+              Text = ("Unit:")
+            }
+          }
+          { HBox7 HBox
+            Move(0,28,490,28)
+            Expand = True
+            Spacing = 2
+            { solution TextBox
+              Move(0,0,112,28)
+              Expand = True
+              Text = ("")
+            }
+            { concentration ValueBox
+              Move(112,0,140,28)
+            }
+            { solvent TextBox
+              Move(273,0,112,28)
+              Expand = True
+              Text = ("")
+            }
+            { sunit ComboBox
+              Move(399,0,63,28)
+              Text = ("")
+              ReadOnly = True
+              List = [("M"), ("mM"), ("\xC2\xB5M"), ("X")]
+            }
+          }
+        }
+        { ColumnView1 ColumnView
+          Move(28,126,497,259)
+          Expand = True
+        }
+        Index = 2
+        Text = ("Experiments")
+        Index = 0
+      }
+    }
+    Index = 1
+    Text = ("Laboratory")
+    Picture = Picture["pic/icons/Erlenmeyerflask.png"]
+    { HBox2 HBox
+      Move(7,7,777,553)
+      Expand = True
+      { TabStrip1 TabStrip
+        Move(0,35,693,497)
+        Expand = True
+        Arrangement = Arrange.Vertical
+        Padding = 3
+        Count = 3
+        Index = 0
+        Text = ("Chemicals")
+        { Panel1 Panel
+          Move(0,0,413,217)
+          Arrangement = Arrange.Horizontal
+          { VBox4 VBox
+            Move(0,7,126,210)
+            { Label11 Label
+              Move(28,7,56,28)
+              Text = ("Name:")
+            }
+            { Label6 Label
+              Move(28,35,77,28)
+              Text = ("Substance:")
+            }
+            { Label10 Label
+              Move(28,63,63,28)
+              Text = ("Quantity:")
+            }
+            { Label7 Label
+              Move(28,91,77,28)
+              Text = ("Supplier:")
+            }
+            { Label9 Label
+              Move(28,119,56,28)
+              Text = ("Location:")
+            }
+            { Label8 Label
+              Move(28,147,56,28)
+              Text = ("Delivery:")
+            }
+            { Label12 Label
+              Move(28,175,77,28)
+              Text = ("Expiry:")
+            }
+          }
+          { VBox3 VBox
+            Move(175,7,210,210)
+            Expand = True
+            { name TextBox
+              Move(7,0,182,28)
+              Text = ("")
+            }
+            { stocksubstance TextBox
+              Move(7,28,182,28)
+              Text = ("")
+              ReadOnly = True
+            }
+            { HBox3 HBox
+              Move(0,56,196,28)
+              { unit ComboBox
+                Move(14,0,70,28)
+                Text = ("")
+                ReadOnly = True
+                List = [("kg"), ("g"), ("mg"), ("l"), ("ml"), ("\xC2\xB5l")]
+              }
+              { quantity ValueBox
+                Move(84,0,105,28)
+                Expand = True
+              }
+            }
+            { supplier ComboBox
+              Move(7,84,182,28)
+              Text = ("")
+              Sorted = True
+            }
+            { location TextBox
+              Move(7,112,182,28)
+              Text = ("")
+            }
+            { delivery ValueBox
+              Move(7,140,182,28)
+              Type = ValueBox.Date
+            }
+            { expiry ValueBox
+              Move(7,168,182,28)
+              Type = ValueBox.Date
+            }
+          }
+        }
+        Index = 1
+        Text = ("Solutions")
+        Index = 2
+        Text = ("Results")
+        Index = 0
+      }
+    }
+    Index = 0
+  }
+}

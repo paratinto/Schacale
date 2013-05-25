@@ -1,0 +1,68 @@
+' Gambas module file
+' Gambas class file
+wwwsite AS String[]
+
+PUBLIC SUB getSite(molname AS String)
+  'How to download a file from the internet
+  'The following code works in Gambas version 1.0.15
+  'On 2007-jun-17, Daniel Compos noted that for Gambas v 1.9.49+:
+  '   Put the "Async" PROPERTY set TO FALSE prior TO Get(), that way
+  '   Get() will STOP the program flow UNTIL all the information IS
+  '   received. In that CASE you should USE also the "TimeOut" PROPERTY TO
+  '   set a timeout, IF NOT, it could hang forvever IF the server does NOT
+  '   reply properly.
+
+  DIM h AS HttpClient
+  DIM buffer AS String
+  h = NEW HttpClient AS "h"
+  h.URL = "http://webbook.nist.gov/cgi/cbook.cgi?Name=" & molname & "&Units=SI&Units=SI&cTG=1&cTC=1&cTP=1&cTR=1&cPI=1"
+  h.Get
+
+  DO WHILE h.Status <> 0
+    WAIT 0.01
+  LOOP
+
+  PRINT "begin curl"
+  IF h.Status < 0 THEN
+    PRINT "ERROR"
+  ELSE
+    ' Success - read the data
+    IF Lof(h) THEN READ #h, buffer, Lof(h)
+    
+  END IF
+  wwwsite = Split(buffer, "<>")
+  PRINT "end curl"
+
+END
+
+PUBLIC FUNCTION molweight() AS Float
+  DIM pos AS Integer
+  
+  pos = wwwsite.Find("Molecular weight:")
+  PRINT pos
+  RETURN CFloat(wwwsite[pos + 2])
+  
+  CATCH
+  
+END
+
+PUBLIC FUNCTION molformula() AS String
+  DIM pos AS Integer
+  DIM wwwformula AS String = ""
+  
+  pos = wwwsite.Find("Formula:") + 2
+  PRINT pos
+  
+    
+  WHILE wwwsite[pos] <> "/li" 
+     IF wwwsite[pos] <> "sub" AND wwwsite[pos] <> "/sub" AND wwwsite[pos] <> " " THEN wwwformula = wwwformula & wwwsite[pos]  
+     INC pos
+     PRINT wwwsite[pos]
+  WEND 
+
+  
+  RETURN wwwformula
+  
+  CATCH
+  
+END

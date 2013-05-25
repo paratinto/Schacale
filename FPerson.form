@@ -1,0 +1,100 @@
+# Gambas Form File 2.0
+
+{ Form Form
+  MoveScaled(0,0,65,30)
+  Text = ("Personal Information")
+  Border = Window.Fixed
+  { Frame1 Frame
+    MoveScaled(1,1,63,28)
+    Text = ("")
+    { Label1 Label
+      MoveScaled(1,19,6,3)
+      Text = ("Name:")
+    }
+    { Label2 Label
+      MoveScaled(1,23,6,3)
+      Text = ("Grade:")
+    }
+    { PictureBox1 PictureBox
+      MoveScaled(1,2,15,15)
+      Alignment = Align.Center
+      Border = Border.Plain
+    }
+    { name TextBox
+      MoveScaled(7,19,16,3)
+      Text = ("")
+    }
+    { GradeBox ComboBox
+      MoveScaled(7,23,16,3)
+      Text = ("")
+      ReadOnly = True
+      List = [("--choose--"), ("Student"), ("Bachelor"), ("Master / Diploma"), ("Postdoc"), ("Professor"), ("Assistant")]
+    }
+    { Frame2 Frame
+      MoveScaled(17,3,34,13)
+      Text = ("")
+      { Label4 Label
+        MoveScaled(5,1,8,3)
+        Text = ("Location:")
+      }
+      { Label5 Label
+        MoveScaled(5,5,9,3)
+        Text = ("Office:")
+      }
+      { office TextBox
+        MoveScaled(14,5,19,3)
+        Text = ("")
+      }
+      { Label3 Label
+        MoveScaled(5,9,8,3)
+        Text = ("E-mail:")
+      }
+      { email TextBox
+        MoveScaled(14,9,19,3)
+        Text = ("")
+      }
+      { location TextBox
+        MoveScaled(14,1,19,3)
+        Text = ("")
+      }
+      { Button1 Button
+        MoveScaled(1,9,3,3)
+        Ignore = True
+        Text = ("")
+        Picture = Picture["pic/icons/mail.png"]
+      }
+      { PictureBox2 PictureBox
+        MoveScaled(1,5,3,3)
+        Picture = Picture["icon:/small/system"]
+        Alignment = Align.Center
+      }
+      { PictureBox3 PictureBox
+        MoveScaled(1,1,3,3)
+        Picture = Picture["pic/icons/home.png"]
+        Alignment = Align.Center
+      }
+    }
+    { Frame3 Frame
+      MoveScaled(25,17,21,10)
+      Text = ("Experiments")
+      { LBoxExperiments ListBox
+        MoveScaled(1,2,19,7)
+      }
+    }
+    { HBox1 HBox
+      MoveScaled(48,22,12,3)
+    }
+    { Label6 Label
+      MoveScaled(47,19,14,2)
+      Text = ("published SOPs")
+    }
+    { closeB Button
+      MoveScaled(52,4,10,2)
+      Text = ("Close")
+    }
+    { saveB Button
+      MoveScaled(52,8,10,2)
+      Text = ("Save")
+    }
+  }
+}

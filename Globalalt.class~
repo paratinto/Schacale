@@ -1,0 +1,136 @@
+' Gambas class file
+PUBLIC CONST workdir AS String = "~/.ChemManager/"
+
+STATIC PUBLIC atomtable AS NEW Atoms
+
+STATIC PUBLIC dbcon AS NEW Connection
+
+STATIC SUB checkdb()
+
+  DIM molecules, molcomp, moldanger, chemicals, suppliers, users, solutions, solcomp AS Table
+  
+  
+  IF NOT dbcon.Tables.Exist("users") THEN   
+    users = dbcon.Tables.Add("users")
+    users.Fields.Add("id", gb.integer)
+    users.Fields.Add("deleted", gb.String, 1)
+    users.Fields.Add("name", gb.string)
+    users.Fields.Add("location", gb.string)
+    users.Fields.Add("office", gb.string)
+    users.Fields.Add("phone", gb.string)
+    users.Fields.Add("email", gb.String)
+    users.Fields.Add("rights", gb.string)
+    users.PrimaryKey = ["id"]
+    users.Update()
+  ENDIF 
+    
+  IF NOT dbcon.Tables.Exist("molecules") THEN 
+    molecules = dbcon.Tables.Add("molecules")
+    molecules.Fields.Add("id", gb.integer)
+    molecules.Fields.Add("deleted", gb.string, 1)
+    molecules.Fields.Add("name", gb.string)
+ '   molecules.Fields.Add("molcompid", gb.Integer) 'really necessary?! --> obsolete, due to usage of molecules!id in dependent tables
+    molecules.Fields.Add("weight", gb.Float)
+    molecules.Fields.Add("group", gb.String)
+    molecules.Fields.Add("description", gb.String)
+    molecules.Fields.Add("creator", gb.Integer)
+    molecules.PrimaryKey = ["id"]
+    molecules.Update()
+  ENDIF 
+    
+  IF NOT dbcon.Tables.Exist("molcomp") THEN 
+    molcomp = dbcon.Tables.Add("molcomp")
+    molcomp.Fields.Add("id", gb.integer) 'same as molecules!id
+    molcomp.Fields.Add("symbol", gb.String, 3)
+    molcomp.Fields.Add("count", gb.integer)
+    molcomp.Update()
+  ENDIF  
+  
+  IF NOT dbcon.Tables.Exist("moldanger") THEN 
+    moldanger = dbcon.Tables.Add("moldanger")
+    moldanger.Fields.Add("id", gb.Integer) 'same as molecules!id
+    moldanger.Fields.Add("danger", gb.String)
+    moldanger.Update()
+  ENDIF 
+   
+  IF NOT dbcon.Tables.Exist("chemicals") THEN 
+    chemicals = dbcon.Tables.Add("chemicals")
+    chemicals.Fields.Add("id", gb.integer)
+    chemicals.Fields.Add("deleted", gb.String, 1)
+    chemicals.Fields.Add("name", gb.String)
+    chemicals.Fields.Add("substid", gb.String) 'same as molecules!id 
+    chemicals.Fields.Add("quantity", gb.Float)
+    chemicals.Fields.Add("unit", gb.String, 5)
+    chemicals.Fields.Add("location", gb.String)
+    chemicals.Fields.Add("supplid", gb.string)
+    chemicals.Fields.Add("price", gb.Float)
+    chemicals.Fields.Add("currency", gb.string, 4)
+    chemicals.Fields.Add("delivery", gb.Date)
+    chemicals.Fields.Add("expiry", gb.Date)
+    chemicals.Fields.Add("creator", gb.integer)
+    chemicals.PrimaryKey = ["id"]
+    chemicals.Update()
+  ENDIF  
+      
+  IF NOT dbcon.Tables.Exist("suppliers") THEN   
+    suppliers = dbcon.Tables.Add("suppliers")
+    suppliers.Fields.Add("id", gb.integer)
+    suppliers.Fields.Add("deleted", gb.String, 1)
+    suppliers.Fields.Add("name", gb.string)
+    suppliers.Fields.Add("location", gb.string)
+    suppliers.Fields.Add("creator", gb.Integer)
+    suppliers.PrimaryKey = ["id"]
+    suppliers.Update()
+  ENDIF 
+  
+  IF NOT dbcon.Tables.Exist("solutions") THEN 
+    solutions = dbcon.Tables.Add("solutions")
+    solutions.Fields.Add("id", gb.integer)
+    solutions.Fields.Add("deleted", gb.integer, 1)
+    solutions.Fields.Add("name", gb.integer)
+    solutions.Fields.Add("concentration", gb.Float)
+    solutions.Fields.Add("unit", gb.String, 5)
+    solutions.Fields.Add("volume", gb.Float) 'standardised: liter
+    solutions.Fields.Add("creator", gb.Integer)
+    solutions.Fields.Add("date", gb.Date)
+    solutions.PrimaryKey = ["id"]
+    solutions.Update()
+  ENDIF 
+  
+  IF NOT dbcon.Tables.Exist("solcomp") THEN
+    solcomp = dbcon.Tables.Add("solcomp")
+    solcomp.Fields.Add("id", gb.Integer)
+    solcomp.Fields.Add("chemid", gb.Integer)
+    solcomp.Fields.Add("molid", gb.Integer)
+    solcomp.Update()
+  ENDIF  
+  
+  dbcon.Commit()
+
+END
+
+ 
+STATIC PUBLIC SUB initapp()
+  
+  dbcon.Close() ' Close the connection
+  dbcon.Type = "mysql" ' Type of connection
+  dbcon.Host = "localhost" ' Name of the server
+  dbcon.Login = "root" ' User's name for the connection
+  dbcon.Port = "3306" ' Port to use in the connection, usually 3306
+  dbcon.Name = "schacale" ' Name of the data base we want to use
+  dbcon.Password = "" ' User's password
+  dbcon.Open()
+  checkdb()
+  
+END
+
+STATIC PUBLIC SUB closeapp()
+
+  dbcon.Close()
+
+END
+
+
+
+
+

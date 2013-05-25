@@ -1,0 +1,13 @@
+' Gambas module file
+
+PUBLIC FUNCTION factor(wanted AS String, available AS String) AS Integer
+  
+  DIM units AS String[] = ["pg", "ng", "µg", "mg", "g", "kg", "µl", "ml", "l", "pm" "nm", "µM", "mM", "M"]
+  
+  DIM result AS Integer
+  
+    result = Exp10((units.Find(available) - units.Find(wanted)) * 3)
+  
+  RETURN result
+  
+END

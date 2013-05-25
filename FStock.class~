@@ -1,0 +1,60 @@
+' Gambas class file
+  Test AS NEW Atoms
+
+  
+' FUNCTION scan_exp(expression AS String) AS String[]
+' 
+'   DIM edited_exp AS String
+'   DIM tokens AS String[]
+'   DIM i AS Integer
+' 
+'   FOR i = 1 TO Len(expression)
+'     IF IsUpper(Mid(expression, i + 1, 1)) OR ((IsDigit(Mid(expression, i + 1, 1))) AND NOT (IsDigit(Mid(expression, i, 1))))
+'       edited_exp = edited_exp & Mid(expression, i, 1) & ","
+'     ELSE 
+'       edited_exp = edited_exp & Mid(expression, i, 1) 
+'     ENDIF 
+'   NEXT 
+'   
+'   tokens = Split(edited_exp, ",")
+'   tokens.Add("!")
+' 
+'   RETURN tokens
+' 
+' END
+' 
+' 
+' 
+' 
+' 
+' PUBLIC SUB formula_LostFocus()
+' 
+'   DIM token_list AS String[]
+'   DIM i, j, k AS Integer
+'   DIM weight AS Float
+' 
+'   token_list = scan_exp(formula.Text)
+'   weight = 0
+'   FOR i = 0 TO token_list.Length - 2 
+'     IF token_list[i + 1] <> "!" AND IsDigit(token_list[i + 1]) THEN 
+'       weight = weight + CInt(token_list[i + 1]) * get_weight(token_list[i])
+'     ELSE 
+'       IF NOT IsDigit(token_list[i]) THEN weight = weight + get_weight(token_list[i])
+'     ENDIF 
+'     mass.text = weight      
+'   NEXT
+'      
+'   CATCH 
+'     mass.text = ""
+' 
+'END
+
+PUBLIC SUB Form_Open()
+  DIM a AS String = "2"
+  
+  PRINT Test.getweight("Mt")
+  PRINT Test.getweight("He")
+  PRINT "a" * 5
+  
+
+END
