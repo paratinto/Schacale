@@ -1,8 +1,0 @@
-' Gambas class file
-
-
-PUBLIC SUB Form_Open()
-
-  WebBrowser1.Path = "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
-
-END

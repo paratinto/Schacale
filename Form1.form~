@@ -1,9 +1,0 @@
-# Gambas Form File 2.0
-
-{ Form Form
-  MoveScaled(0,0,64,64)
-  Text = ("")
-  { WebBrowser1 WebBrowser
-    MoveScaled(8,8,45,44)
-  }
-}

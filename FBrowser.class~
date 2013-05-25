@@ -1,8 +1,0 @@
-' Gambas class file
-
-PUBLIC SUB Form_Open() 
-
-  WebBrowser1.Path = "http://en.wikipedia.org/wiki/Glucose"
-  PRINT Crypt.Check("Hallo", "$1$ijj3ybMH$29mya2n8D68ea87b835uo0") 'False if matches!!!
-  
-END
